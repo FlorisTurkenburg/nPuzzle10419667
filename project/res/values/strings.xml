@@ -4,5 +4,6 @@
     <string name="app_name">nPuzzle10419667</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="image_select">Select an image</string>
 
 </resources>

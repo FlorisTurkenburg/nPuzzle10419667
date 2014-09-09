@@ -1,16 +1,46 @@
 package nl.mprog.projects.nPuzzle10419667;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.Toast;
 
-public class ImageSelection extends ActionBarActivity {
-
+public class ImageSelection extends Activity {
+	ListView list;
+	
+	String[] web = {
+		"Image0",
+		"Image1",
+		"Image2",
+		"Image3"
+	};
+	Integer[] imageId = {
+		R.drawable.puzzle_0,
+		R.drawable.puzzle_1,
+		R.drawable.puzzle_2,
+		R.drawable.puzzle_3
+	};
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_selection);
+		
+		// Make the image list
+		ImageList adapter = new ImageList(ImageSelection.this, web, imageId);
+		list = (ListView) findViewById(R.id.list);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view,
+                                int position, long id) {
+            Toast.makeText(ImageSelection.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
+        	}
+        });
 	}
 
 	@Override
