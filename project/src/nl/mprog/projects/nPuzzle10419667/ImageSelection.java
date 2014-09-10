@@ -2,6 +2,7 @@ package nl.mprog.projects.nPuzzle10419667;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -86,4 +87,9 @@ public class ImageSelection extends Activity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	public void onConfigurationChanged(Configuration newConfig) {
+        newConfig.orientation = Configuration.ORIENTATION_PORTRAIT;
+        super.onConfigurationChanged(newConfig);
+    }
 }

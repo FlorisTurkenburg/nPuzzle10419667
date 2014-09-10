@@ -19,11 +19,13 @@
         android:id="@+id/firstTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_below="@id/moves" />
     <ImageView
         android:id="@+id/secondTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:padding="5dp"
         android:layout_below="@id/firstTile" />
 
 </RelativeLayout>

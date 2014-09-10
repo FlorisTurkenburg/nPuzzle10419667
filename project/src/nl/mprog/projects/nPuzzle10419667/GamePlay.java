@@ -4,38 +4,31 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ImageView;
+import android.widget.GridView;
 
 public class GamePlay extends ActionBarActivity {
+    private Handler mHandler = new Handler();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Intent intent = getIntent();
-		String puzzleName = intent.getStringExtra(ImageSelection.PUZZLENAME);
-		String difficulty = intent.getStringExtra(ImageSelection.DIFFICULTY);
-		Integer id = (Integer) getResources().getIdentifier(puzzleName, "drawable", getPackageName());
-		int n = 0;
-		if(difficulty.equals("easy")) {
-			n = 3;
-		} 
-		else if(difficulty.equals("medium")) {
-			n = 4;
-		}
-		else if(difficulty.equals("hard")) {
-			n = 5;
-		}
 		
-		Bitmap[] tiles = createTiles(id, n);
+		Bitmap[] tiles = showPreview(intent);
 		
-		setContentView(R.layout.activity_game_play);
-		ImageView imageView = (ImageView) findViewById(R.id.firstTile);
-		imageView.setImageBitmap(tiles[0]);
-		imageView = (ImageView) findViewById(R.id.secondTile);
-		imageView.setImageBitmap(tiles[1]);
+	    
+	    mHandler.postDelayed(new Runnable() {
+            public void run() {
+                //doStuff();
+            	setContentView(R.layout.activity_game_play);
+            }
+        }, 3000);
+		
+		
 	}
 	
 
@@ -69,14 +62,42 @@ public class GamePlay extends ActionBarActivity {
 		int tileHeight = height / n;
 		
 		int tile = 0;
-		for (int i = 0; i < n; i++) {
-			for (int j = 0; j < n; j++) {
+		for (int j = 0; j < n; j++) {
+			for (int i = 0; i < n; i++) {
 				tiles[tile] = Bitmap.createBitmap(puzzle, i*tileWidth, j*tileHeight, tileWidth, tileHeight);
 				tile++;
 			}
 		}
+		tiles[n*n-1] = null;
 		
 		return tiles;
 		
+	}
+	
+	public Bitmap[] showPreview(Intent intent) {
+		String puzzleName = intent.getStringExtra(ImageSelection.PUZZLENAME);
+		String difficulty = intent.getStringExtra(ImageSelection.DIFFICULTY);
+		Integer id = (Integer) getResources().getIdentifier(puzzleName, "drawable", getPackageName());
+		int n = 0;
+		if(difficulty.equals("easy")) {
+			n = 3;
+		} 
+		else if(difficulty.equals("medium")) {
+			n = 4;
+		}
+		else if(difficulty.equals("hard")) {
+			n = 5;
+		}
+		
+		Bitmap[] tiles = createTiles(id, n);
+		
+		setContentView(R.layout.puzzle_preview);
+		
+		GridView gridview = (GridView) findViewById(R.id.gridview);
+		gridview.setNumColumns(n);
+	    gridview.setAdapter(new ImageAdapter(this, tiles));
+	    
+	    return tiles;
+	    
 	}
 }
