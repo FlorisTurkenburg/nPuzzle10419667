@@ -1,0 +1,22 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="nl.mprog.projects.nPuzzle10419667.GamePlay" >
+
+    <item
+        android:id="@+id/reset"
+        android:orderInCategory="100"
+        android:title="@string/reset"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/difficulty"
+        android:orderInCategory="100"
+        android:title="@string/difficulty"
+        app:showAsAction="never"/>
+    <item
+        android:id="@+id/quit"
+        android:orderInCategory="100"
+        android:title="@string/quit"
+        app:showAsAction="never"/>
+
+</menu>

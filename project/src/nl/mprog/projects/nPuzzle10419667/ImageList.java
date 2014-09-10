@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 public class ImageList extends ArrayAdapter<String> {
 	private final Activity context;
@@ -24,10 +23,12 @@ public class ImageList extends ArrayAdapter<String> {
 	public View getView(int position, View view, ViewGroup parent) {
 		LayoutInflater inflater = context.getLayoutInflater();
 		View elementView= inflater.inflate(R.layout.image_list, null, true);
-		TextView txtTitle = (TextView) elementView.findViewById(R.id.txt);
+		//TextView txtTitle = (TextView) elementView.findViewById(R.id.txt);
 		ImageView imageView = (ImageView) elementView.findViewById(R.id.image);
-		txtTitle.setText(web[position]);
-		imageView.setImageResource(imageId[position]);
+		//txtTitle.setText(web[position]);
+		imageView.setImageBitmap(
+			    BitmapMethods.decodeSampledBitmapFromResource(context.getResources(), (int)imageId[position], 200, 200));
 		return elementView;
 	}
+
 }

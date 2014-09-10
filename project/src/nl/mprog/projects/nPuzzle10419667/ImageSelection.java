@@ -1,6 +1,7 @@
 package nl.mprog.projects.nPuzzle10419667;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,35 +12,59 @@ import android.widget.Toast;
 
 public class ImageSelection extends Activity {
 	ListView list;
+	public final static String PUZZLENAME = "puzzle";
+	public final static String DIFFICULTY = "medium";
 	
-	String[] web = {
-		"Image0",
-		"Image1",
-		"Image2",
-		"Image3"
-	};
-	Integer[] imageId = {
+	
+//	String[] web = {
+//		"Image0",
+//		"Image1",
+//		"Image2",
+//		"Image3"
+//	};
+/*	Integer[] imageId = {
 		R.drawable.puzzle_0,
 		R.drawable.puzzle_1,
 		R.drawable.puzzle_2,
 		R.drawable.puzzle_3
-	};
+	};*/
+	Integer[] imageId;
+	String[] web;
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_image_selection);
 		
+		// Check how many images there are available
+		int i = 0;
+		while(0 != getResources().getIdentifier("puzzle_"+i, "drawable", getPackageName())) {
+			i++;
+		}
+		
+		// Store the drawable ID's in the imageId array
+		imageId = new Integer[i];
+		web = new String[i];
+		for(int j = 0; j < i; j++) {
+			imageId[j] = getResources().getIdentifier("puzzle_"+j, "drawable", getPackageName());
+		}
+		
 		// Make the image list
 		ImageList adapter = new ImageList(ImageSelection.this, web, imageId);
 		list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-        @Override
-        public void onItemClick(AdapterView<?> parent, View view,
-                                int position, long id) {
-            Toast.makeText(ImageSelection.this, "You Clicked at " +web[+ position], Toast.LENGTH_SHORT).show();
-        	}
+	    	@Override
+	        public void onItemClick(AdapterView<?> parent, View view,
+	                                int position, long id) {
+	    		String name = getResources().getResourceEntryName(imageId[+ position]);
+	            Toast.makeText(ImageSelection.this, "You Clicked at " +name, Toast.LENGTH_SHORT).show();
+	            Intent intent = new Intent(ImageSelection.this, GamePlay.class);
+	            intent.putExtra(PUZZLENAME, name);
+	            intent.putExtra(DIFFICULTY, "medium");
+	            startActivity(intent);
+	    	}
         });
 	}
 
