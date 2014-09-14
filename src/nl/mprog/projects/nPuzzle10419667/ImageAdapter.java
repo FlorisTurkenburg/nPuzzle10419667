@@ -1,3 +1,8 @@
+/* Author: Floris Turkenburg
+ * Email: sk8_floris@hotmail.com
+ * UvANetID: 10419667 
+ */
+
 package nl.mprog.projects.nPuzzle10419667;
 
 

@@ -1,8 +1,12 @@
+/* Author: Floris Turkenburg
+ * Email: sk8_floris@hotmail.com
+ * UvANetID: 10419667 
+ */
+
 package nl.mprog.projects.nPuzzle10419667;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -16,19 +20,6 @@ public class ImageSelection extends Activity {
 	public final static String PUZZLENAME = "puzzle";
 	public final static String DIFFICULTY = "medium";
 	
-	
-//	String[] web = {
-//		"Image0",
-//		"Image1",
-//		"Image2",
-//		"Image3"
-//	};
-/*	Integer[] imageId = {
-		R.drawable.puzzle_0,
-		R.drawable.puzzle_1,
-		R.drawable.puzzle_2,
-		R.drawable.puzzle_3
-	};*/
 	Integer[] imageId;
 	String[] web;
 	
@@ -88,8 +79,8 @@ public class ImageSelection extends Activity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public void onConfigurationChanged(Configuration newConfig) {
-        newConfig.orientation = Configuration.ORIENTATION_PORTRAIT;
-        super.onConfigurationChanged(newConfig);
-    }
+//	public void onConfigurationChanged(Configuration newConfig) {
+//        newConfig.orientation = Configuration.ORIENTATION_PORTRAIT;
+//        super.onConfigurationChanged(newConfig);
+//    }
 }

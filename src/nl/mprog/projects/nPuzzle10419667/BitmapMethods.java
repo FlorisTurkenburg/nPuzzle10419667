@@ -1,9 +1,19 @@
+/* Author: Floris Turkenburg
+ * Email: sk8_floris@hotmail.com
+ * UvANetID: 10419667 
+ */
+
 package nl.mprog.projects.nPuzzle10419667;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+/* These methods are taken from the android developer site, they are used to
+ * scale down images to prevent memory overflow.
+ * Source:
+ * http://developer.android.com/training/displaying-bitmaps/load-bitmap.html
+ */
 public class BitmapMethods {
 	public static int calculateInSampleSize(BitmapFactory.Options options, int reqWidth, int reqHeight) {
 	    // Raw height and width of image
