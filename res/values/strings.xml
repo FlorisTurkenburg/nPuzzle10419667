@@ -10,5 +10,10 @@
     <string name="reset">Reset puzzle</string>
     <string name="difficulty">Difficulty</string>
     <string name="moves">Moves: 0</string>
+    <string name="pref_difficulty">Difficulty</string>
+    <string name="game_open">gameOpen</string>
+    <string name="num_moves">numMoves</string>
+    <string name="puzzle_name">puzzleName</string>
+    <string name="pref_file_key">nPuzzlePrefs</string>
 
 </resources>

@@ -16,18 +16,18 @@
         android:textSize="@dimen/abc_action_bar_title_text_size"
         android:textStyle="bold" />
 
-    <ImageView
-        android:id="@+id/firstTile"
-        android:layout_width="wrap_content"
+    <GridView
+        android:id="@+id/gamegridview"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/moves"
-        android:padding="5dp" />
-
-    <ImageView
-        android:id="@+id/secondTile"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/firstTile"
-        android:padding="5dp" />
+        android:layout_centerVertical="true"
+        android:columnWidth="90dp"
+        android:gravity="center"
+        android:horizontalSpacing="5dp"
+        android:numColumns="auto_fit"
+        android:padding="2dp"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="5dp" />
 
 </RelativeLayout>
