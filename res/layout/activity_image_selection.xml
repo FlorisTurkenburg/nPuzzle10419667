@@ -19,12 +19,12 @@
         android:textSize="@dimen/abc_action_bar_title_text_size"
         android:textStyle="bold|italic"
         android:typeface="serif" />
-    
+
     <ListView
-        android:id="@+id/list"    
-        android:layout_below="@id/textView1"
+        android:id="@+id/list"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textView1" >
     </ListView>
-        
+
 </RelativeLayout>

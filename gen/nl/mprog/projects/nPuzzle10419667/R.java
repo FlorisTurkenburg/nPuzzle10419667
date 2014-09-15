@@ -1085,6 +1085,7 @@ containing a value of this type.
         public static final int puzzle_1=0x7f02005b;
         public static final int puzzle_2=0x7f02005c;
         public static final int puzzle_3=0x7f02005d;
+        public static final int puzzle_4=0x7f02005e;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;

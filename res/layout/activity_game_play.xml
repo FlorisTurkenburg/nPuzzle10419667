@@ -15,17 +15,19 @@
         android:text="@string/moves"
         android:textSize="@dimen/abc_action_bar_title_text_size"
         android:textStyle="bold" />
+
     <ImageView
         android:id="@+id/firstTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@id/moves" />
+        android:layout_below="@id/moves"
+        android:padding="5dp" />
+
     <ImageView
         android:id="@+id/secondTile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="5dp"
-        android:layout_below="@id/firstTile" />
+        android:layout_below="@id/firstTile"
+        android:padding="5dp" />
 
 </RelativeLayout>
