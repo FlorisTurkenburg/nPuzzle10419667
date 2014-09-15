@@ -44,7 +44,7 @@ public class ImageAdapter extends BaseAdapter {
             imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
             imageView.setPadding(2, 2, 2, 2);
         } else {
-            imageView = (ImageView)convertView;
+            imageView = (ImageView) convertView;
         }
 
         imageView.setImageBitmap(tiles[position]);

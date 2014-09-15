@@ -31,10 +31,10 @@ public class ImageList extends ArrayAdapter<String> {
         LayoutInflater inflater = context.getLayoutInflater();
         View elementView = inflater.inflate(R.layout.image_list, null, true);
         // TextView txtTitle = (TextView) elementView.findViewById(R.id.txt);
-        ImageView imageView = (ImageView)elementView.findViewById(R.id.image);
+        ImageView imageView = (ImageView) elementView.findViewById(R.id.image);
         // txtTitle.setText(web[position]);
         imageView.setImageBitmap(BitmapMethods.decodeSampledBitmapFromResource(
-                context.getResources(), (int)imageId[position], 200, 200));
+                context.getResources(), (int) imageId[position], 200, 200));
         return elementView;
     }
 

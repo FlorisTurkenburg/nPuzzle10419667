@@ -46,7 +46,7 @@ public class ImageSelection extends Activity {
 
         // Make the image list
         ImageList adapter = new ImageList(ImageSelection.this, web, imageId);
-        list = (ListView)findViewById(R.id.list);
+        list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

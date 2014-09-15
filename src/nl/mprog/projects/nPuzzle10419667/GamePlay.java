@@ -59,7 +59,7 @@ public class GamePlay extends ActionBarActivity {
     public Bitmap[] createTiles(Integer id, int n) {
         Bitmap[] tiles = new Bitmap[n * n];
 
-        Bitmap puzzle = BitmapFactory.decodeResource(getResources(), (int)id);
+        Bitmap puzzle = BitmapFactory.decodeResource(getResources(), (int) id);
         int width = puzzle.getWidth();
         int height = puzzle.getHeight();
 
@@ -84,7 +84,7 @@ public class GamePlay extends ActionBarActivity {
     public Bitmap[] showPreview(Intent intent) {
         String puzzleName = intent.getStringExtra(ImageSelection.PUZZLENAME);
         String difficulty = intent.getStringExtra(ImageSelection.DIFFICULTY);
-        Integer id = (Integer)getResources()
+        Integer id = (Integer) getResources()
                 .getIdentifier(puzzleName, "drawable", getPackageName());
         int n = 0;
         if (difficulty.equals("easy")) {
@@ -99,7 +99,7 @@ public class GamePlay extends ActionBarActivity {
 
         setContentView(R.layout.puzzle_preview);
 
-        GridView gridview = (GridView)findViewById(R.id.gridview);
+        GridView gridview = (GridView) findViewById(R.id.gridview);
         gridview.setNumColumns(n);
         gridview.setAdapter(new ImageAdapter(this, tiles));
 
