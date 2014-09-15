@@ -24,6 +24,20 @@ GamePlay.java:
   - Quit Game; This saves the current state of the game and returns the user to the ImageSelection screen, if the "back"-button is pressed, the app closes. If a new image is selected, the previous saved game gets deleted and a new game is started.
   After every move that is made, the program checks if the puzzle is solved, and the "moves"-counter is increased by 1, also the game state is saved. If the puzzle is solved, the YouWon activity is started.
 
-YouWon.java
+YouWon.java:
 -------
 This class displays the message: "You have won!" and the original image of the puzzle, followed by the number of moves taken, and a "New Game"-button. This starts up the ImageSelection screen and deletes the saved game (since it is completed).
+
+
+Saving the state:
+--------
+The information about the app is saved using SharedPreferences, this includes:
+  - difficulty
+  - gameOpen
+  - puzzleName
+  - numMoves
+  - tile positions
+
+Difficulty is saved whenever it is changed (changeDifficulty screen).
+gameOpen indicates wether the app should open the imageSelection on startup or the GamePlay.
+puzzleName, numMoves and tile positions are needed to resume the game, these are cleared if a new game is selected.
