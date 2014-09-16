@@ -2,8 +2,6 @@
 <resources>
 
     <string name="app_name">nPuzzle10419667</string>
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
     <string name="image_select">Select an image</string>
     <string name="title_activity_game_play">GamePlay</string>
     <string name="quit">Quit game</string>
@@ -15,5 +13,8 @@
     <string name="num_moves">numMoves</string>
     <string name="puzzle_name">puzzleName</string>
     <string name="pref_file_key">nPuzzlePrefs</string>
+    <string name="title_activity_you_won">YouWon</string>
+    <string name="win_message">You have won!</string>
+    <string name="new_game">New Game</string>
 
 </resources>

@@ -8,24 +8,30 @@
 
 package nl.mprog.projects.nPuzzle10419667;
 
+import android.app.ActivityManager;
+import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class GamePlay extends ActionBarActivity {
     private Handler mHandler = new Handler();
     int puzzleSize;
+    int numTiles;
+    int moves = 0;
+    Bitmap[] tiles;
 
     /*
      * public int[] tilePos = { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
@@ -34,13 +40,12 @@ public class GamePlay extends ActionBarActivity {
     // This array links the position of the tile in the screen (the index) with
     // the number of the tile bitmap (the value corresponds with the index in Bitmap[] tiles).
     public int[] tilePos = {
-            0, 13, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 14, 15
+            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        final Bitmap[] tiles;
         String puzzleName;
 
         Intent intent = getIntent();
@@ -54,7 +59,7 @@ public class GamePlay extends ActionBarActivity {
         if (resume) {
             puzzleName = sharedPref.getString(getString(R.string.puzzle_name), "puzzle_0");
         } else {
-            puzzleName = intent.getStringExtra(ImageSelection.PUZZLENAME);
+            puzzleName = intent.getStringExtra(ImageSelection.EXTRA_PUZZLENAME);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(getString(R.string.puzzle_name), puzzleName);
             editor.commit();
@@ -73,22 +78,25 @@ public class GamePlay extends ActionBarActivity {
             puzzleSize = 4;
         }
 
-        tiles = createTiles(id);
-        
+        numTiles = puzzleSize * puzzleSize;
+
+        createTiles(id);
+
         if (resume) {
             // load the tile positions and number of moves
-            int n2 = puzzleSize * puzzleSize;
-            for (int i = 0; i < n2; i++) {
-                tilePos[i] = sharedPref.getInt("tile"+i, i);
+            for (int i = 0; i < numTiles; i++) {
+                tilePos[i] = sharedPref.getInt("tile" + i, i);
             }
-            playGame(tiles);
-            
+
+            moves = sharedPref.getInt(getString(R.string.num_moves), 0);
+            playGame();
+
         } else {
-            showPreview(tiles);
+            showPreview();
 
             mHandler.postDelayed(new Runnable() {
                 public void run() {
-                    playGame(tiles);
+                    playGame();
                 }
             }, 3000);
 
@@ -109,17 +117,24 @@ public class GamePlay extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-        if (id == R.id.action_settings) {
+        if (id == R.id.quit) {
+            Intent intent = new Intent(GamePlay.this, ImageSelection.class);
+            intent.putExtra("fromGamePlay", true);
+            startActivity(intent);
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    public Bitmap[] createTiles(Integer id) {
-        int n2 = puzzleSize * puzzleSize;
-        Bitmap[] tiles = new Bitmap[n2];
+    public void createTiles(Integer id) {
+        tiles = new Bitmap[numTiles];
 
-        Bitmap puzzle = BitmapFactory.decodeResource(getResources(), (int) id);
+        MemoryInfo memInfo = new MemoryInfo();
+        ActivityManager actMan = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+        actMan.getMemoryInfo(memInfo);
+        Log.i("GamePlay", "Memory available before tiles: " + memInfo.availMem);
+        Bitmap puzzle = BitmapMethods.decodeSampledBitmapFromResource(getResources(), id, 200, 200);
+        // Bitmap puzzle = BitmapFactory.decodeResource(getResources(), (int) id);
         int width = puzzle.getWidth();
         int height = puzzle.getHeight();
 
@@ -134,14 +149,18 @@ public class GamePlay extends ActionBarActivity {
                 tile++;
             }
         }
-        tiles[n2 - 1] = null;
-        puzzle.recycle();
+        tiles[numTiles - 1] = null;
+        actMan.getMemoryInfo(memInfo);
+        Log.i("GamePlay", "Memory available after tiles: " + memInfo.availMem);
 
-        return tiles;
+        puzzle.recycle();
+        puzzle = null;
+        actMan.getMemoryInfo(memInfo);
+        Log.i("GamePlay", "Memory available after puzzle.recycle(): " + memInfo.availMem);
 
     }
 
-    public void showPreview(Bitmap[] tiles) {
+    public void showPreview() {
 
         setContentView(R.layout.puzzle_preview);
 
@@ -153,24 +172,25 @@ public class GamePlay extends ActionBarActivity {
 
     }
 
-    public void playGame(Bitmap[] tiles) {
-        
-        final Bitmap[] finalTiles = tiles;
-        final int n2 = puzzleSize * puzzleSize;
-        final Bitmap[] newTiles = new Bitmap[n2];
+    public void playGame() {
+
+        final Bitmap[] newTiles = new Bitmap[numTiles];
 
         // Create a new array with the tile bitmaps on the index of the position where they should
         // be drawn.
-        for (int i = 0; i < n2; i++) {
+        for (int i = 0; i < numTiles; i++) {
             newTiles[i] = tiles[tilePos[i]];
         }
-        
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),Context.MODE_PRIVATE);
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.game_open), true);
         editor.commit();
-        
+
         setContentView(R.layout.activity_game_play);
+        final TextView text = (TextView) findViewById(R.id.moves);
+        text.setText("Moves: " + moves);
         final GridView gridview = (GridView) findViewById(R.id.gamegridview);
         gridview.setNumColumns(puzzleSize);
         gridview.setAdapter(new ImageAdapter(this, newTiles));
@@ -181,13 +201,25 @@ public class GamePlay extends ActionBarActivity {
                 Toast.makeText(GamePlay.this, "You Clicked at " + position, Toast.LENGTH_SHORT)
                         .show();
 
-                Toast.makeText(GamePlay.this,
-                        "Neighbouring? =" + checkIfNeighbouringEmpty(position), Toast.LENGTH_SHORT)
-                        .show();
-                for (int i = 0; i < n2; i++) {
-                    newTiles[i] = finalTiles[tilePos[i]];
+                if (checkIfNeighbouringEmpty(position)) {
+                    text.setText("Moves: " + moves);
+                    for (int i = 0; i < numTiles; i++) {
+                        newTiles[i] = tiles[tilePos[i]];
+                    }
+                    gridview.setAdapter(new ImageAdapter(GamePlay.this, newTiles));
+
+                    if (checkIfSolved()) {
+                        for (int i = 0; i < numTiles - 1; i++) {
+                            newTiles[i].recycle();
+                            newTiles[i] = null;
+
+                        }
+
+                        Intent intent = new Intent(GamePlay.this, YouWon.class);
+                        startActivity(intent);
+
+                    }
                 }
-                gridview.setAdapter(new ImageAdapter(GamePlay.this, newTiles));
 
             }
         });
@@ -195,11 +227,10 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public boolean checkIfNeighbouringEmpty(int position) {
-        int n2 = puzzleSize * puzzleSize;
         int indexEmpty = 0;
         // Search for the 1d index of the empty tile (= the last tile = n*n-1)
-        for (int i = 0; i < n2; i++) {
-            if (tilePos[i] == n2 - 1) {
+        for (int i = 0; i < numTiles; i++) {
+            if (tilePos[i] == numTiles - 1) {
                 indexEmpty = i;
                 break;
             }
@@ -219,17 +250,57 @@ public class GamePlay extends ActionBarActivity {
             int temp = tilePos[indexEmpty];
             tilePos[indexEmpty] = tilePos[position];
             tilePos[position] = temp;
-            
-            SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPref.edit();
-            for (int i = 0; i < n2; i++) {
-                editor.putInt("tile"+i, tilePos[i]);
-            }
-            editor.commit();
+
+            moves++;
+
             return true;
         }
 
         return false;
+
+    }
+
+    public boolean checkIfSolved() {
+
+        for (int i = 0; i < numTiles; i++) {
+            if (i != tilePos[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    // Overrides the back button to open the menu instead of returning to the previous activity.
+    @Override
+    public void onBackPressed() {
+        openOptionsMenu();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
+                Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        for (int i = 0; i < numTiles; i++) {
+            editor.putInt("tile" + i, tilePos[i]);
+        }
+
+        editor.putInt(getString(R.string.num_moves), moves);
+        editor.commit();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+
+        for (int i = 0; i < numTiles - 1; i++) {
+            tiles[i].recycle();
+            tiles[i] = null;
+        }
+        tiles = null;
 
     }
 }

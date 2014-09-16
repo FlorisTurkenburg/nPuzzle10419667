@@ -12,6 +12,7 @@
         android:id="@+id/moves"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
         android:text="@string/moves"
         android:textSize="@dimen/abc_action_bar_title_text_size"
         android:textStyle="bold" />
@@ -20,7 +21,6 @@
         android:id="@+id/gamegridview"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/moves"
         android:layout_centerVertical="true"
         android:columnWidth="90dp"
         android:gravity="center"
