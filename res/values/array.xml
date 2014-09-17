@@ -2,9 +2,9 @@
 <resources>
 
     <array name="difficulties">
-        <item>"easy"</item>
-        <item>"medium"</item>
-        <item>"hard"</item>
+        <item>"Easy"</item>
+        <item>"Medium"</item>
+        <item>"Hard"</item>
     </array>
 
 </resources>

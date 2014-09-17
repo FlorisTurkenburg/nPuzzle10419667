@@ -17,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
@@ -44,8 +45,19 @@ public class GamePlay extends ActionBarActivity {
 
     // This array links the position of the tile in the screen (the index) with
     // the number of the tile bitmap (the value corresponds with the index in Bitmap[] tiles).
-    public int[] tilePos = {
-            0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 14
+    public int[] tilePos;
+    
+    public int[] tilePosEasy = {
+            8,7,6,5,4,3,2,1,0
+    };
+    
+    
+    public int[] tilePosMed = {
+            15,14,13,12,11,10,9,8,7,6,5,4,3,2,0,1
+    };
+    
+    public int[] tilePosHard = {
+            24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
     };
 
     @Override
@@ -74,12 +86,16 @@ public class GamePlay extends ActionBarActivity {
 
         if (difficulty.equals("easy")) {
             puzzleSize = 3;
+            tilePos = tilePosEasy;
         } else if (difficulty.equals("medium")) {
             puzzleSize = 4;
+            tilePos = tilePosMed;
         } else if (difficulty.equals("hard")) {
             puzzleSize = 5;
+            tilePos = tilePosHard;
         } else {
             puzzleSize = 4;
+            tilePos = tilePosMed;
         }
 
         numTiles = puzzleSize * puzzleSize;
@@ -127,10 +143,14 @@ public class GamePlay extends ActionBarActivity {
         if (id == R.id.quit) {
             Intent intent = new Intent(GamePlay.this, ImageSelection.class);
             intent.putExtra("fromGamePlay", true);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
         } else if (id == R.id.difficulty) {
             openChangeDifficulty();
+        } else if (id == R.id.reset) {
+            newGame();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -158,7 +178,8 @@ public class GamePlay extends ActionBarActivity {
                 tile++;
             }
         }
-        tiles[numTiles - 1] = null;
+        tiles[numTiles - 1] = Bitmap.createBitmap(tileWidth, tileHeight, Config.ALPHA_8);
+        
         actMan.getMemoryInfo(memInfo);
         Log.i("GamePlay", "Memory available after tiles: " + memInfo.availMem);
 
@@ -337,10 +358,7 @@ public class GamePlay extends ActionBarActivity {
                     }
                     editor.commit();
                     
-                    Intent intent = new Intent(GamePlay.this, GamePlay.class);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-                    intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
-                    startActivity(intent);
+                    newGame();
 
                 }
             }
@@ -354,6 +372,19 @@ public class GamePlay extends ActionBarActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
 
+    }
+    
+    public void newGame() {
+        
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(getString(R.string.game_open), false);
+        editor.commit();
+        
+        Intent intent = new Intent(GamePlay.this, GamePlay.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
+        startActivity(intent);
     }
 
     // Overrides the back button to open the menu instead of returning to the previous activity.
@@ -378,10 +409,10 @@ public class GamePlay extends ActionBarActivity {
         editor.commit();
     }
 
-    // If stopped, recycle the bitmaps to free memory.
+    // If destroyed recycle the bitmaps
     @Override
-    protected void onStop() {
-        super.onStop();
+    protected void onDestroy() {
+        super.onDestroy();
 
         for (int i = 0; i < numTiles - 1; i++) {
             tiles[i].recycle();

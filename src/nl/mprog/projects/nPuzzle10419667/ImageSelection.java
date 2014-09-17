@@ -74,7 +74,7 @@ public class ImageSelection extends Activity {
 
                     Intent intent = new Intent(ImageSelection.this, GamePlay.class);
                     intent.putExtra(EXTRA_PUZZLENAME, name);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
                 }
             });

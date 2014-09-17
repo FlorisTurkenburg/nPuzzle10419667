@@ -19,10 +19,9 @@
 
     <GridView
         android:id="@+id/gamegridview"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:columnWidth="90dp"
         android:gravity="center"
         android:horizontalSpacing="5dp"
         android:numColumns="auto_fit"
