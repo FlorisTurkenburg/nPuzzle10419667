@@ -10,7 +10,7 @@ ImageSelection.java:
 
 ImageList.java:
 ------
-  This class extends the ArrayAdapter for Strings to make a custom ArrayAdapter which can work with ImageViews. It is here that the ListView gets filled with the scaled down images (using the methods from BitmapMethods.java, which are taken from the android developer website).
+  This class extends the ArrayAdapter for Integers to make a custom ArrayAdapter which can work with ImageViews. It is here that the ListView gets filled with the scaled down images (using the methods from BitmapMethods.java, which are taken from the android developer website).
   
 GamePlay.java:
 ------
