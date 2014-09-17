@@ -1,4 +1,5 @@
-/* Author: Floris Turkenburg
+/* 
+ * Author: Floris Turkenburg
  * Email: sk8_floris@hotmail.com
  * UvANetID: 10419667 
  */
@@ -18,60 +19,59 @@ import android.widget.Toast;
 public class ImageSelection extends Activity {
     public final static String EXTRA_PUZZLENAME = "nl.mprog.projects.nPuzzle10419667.PUZZLENAME";
 
-
     ListView list;
 
     Integer[] imageId;
 
-    String[] web;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        
+
         Intent receivedIntent = getIntent();
         boolean fromExit = receivedIntent.getBooleanExtra("fromGamePlay", false);
-        
+
         // Check if a game is open:
-        final SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key), Context.MODE_PRIVATE);
+        final SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.pref_file_key), Context.MODE_PRIVATE);
         boolean gameOpen = sharedPref.getBoolean(getString(R.string.game_open), false);
-        
+
         if (gameOpen && !fromExit) {
             // Resume the game
             Intent intent = new Intent(ImageSelection.this, GamePlay.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
-            
-        } else {            
+
+        } else {
             setContentView(R.layout.activity_image_selection);
-            
+
             // Check how many images there are available
             int i = 0;
             while (0 != getResources().getIdentifier("puzzle_" + i, "drawable", getPackageName())) {
                 i++;
             }
-            
+
             // Store the drawable ID's in the imageId array
             imageId = new Integer[i];
-            web = new String[i];
             for (int j = 0; j < i; j++) {
-                imageId[j] = getResources().getIdentifier("puzzle_" + j, "drawable", getPackageName());
+                imageId[j] = getResources().getIdentifier("puzzle_" + j, "drawable",
+                        getPackageName());
             }
-            
+
             // Make the image list
-            ImageList adapter = new ImageList(ImageSelection.this, web, imageId);
+            ImageList adapter = new ImageList(ImageSelection.this, imageId);
             list = (ListView) findViewById(R.id.list);
             list.setAdapter(adapter);
             list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String name = getResources().getResourceEntryName(imageId[+position]);
-                    Toast.makeText(ImageSelection.this, "You Clicked at " + name, Toast.LENGTH_SHORT)
-                    .show();
+                    Toast.makeText(ImageSelection.this, "You Clicked at " + name,
+                            Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean(getString(R.string.game_open), false);
                     editor.commit();
-                    
+
                     Intent intent = new Intent(ImageSelection.this, GamePlay.class);
                     intent.putExtra(EXTRA_PUZZLENAME, name);
                     intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
@@ -80,5 +80,4 @@ public class ImageSelection extends Activity {
             });
         }
     }
-    
 }

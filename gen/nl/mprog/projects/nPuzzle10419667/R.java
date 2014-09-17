@@ -16,6 +16,9 @@ public final class R {
         public static final int abc_slide_out_bottom=0x7f040004;
         public static final int abc_slide_out_top=0x7f040005;
     }
+    public static final class array {
+        public static final int difficulties=0x7f0c0000;
+    }
     public static final class attr {
         /**  Custom divider drawable to use for elements in the action bar. 
          <p>Must be a reference to another resource, in the form "<code>@[+][<i>package</i>:]<i>type</i>:<i>name</i></code>"
@@ -1081,12 +1084,15 @@ containing a value of this type.
         public static final int background_2=0x7f020057;
         public static final int background_3=0x7f020058;
         public static final int background_blue=0x7f020059;
-        public static final int ic_launcher=0x7f02005a;
-        public static final int puzzle_0=0x7f02005b;
-        public static final int puzzle_1=0x7f02005c;
-        public static final int puzzle_2=0x7f02005d;
-        public static final int puzzle_3=0x7f02005e;
-        public static final int puzzle_4=0x7f02005f;
+        public static final int ic_action_back=0x7f02005a;
+        public static final int ic_action_refresh=0x7f02005b;
+        public static final int ic_action_settings=0x7f02005c;
+        public static final int ic_launcher=0x7f02005d;
+        public static final int puzzle_0=0x7f02005e;
+        public static final int puzzle_1=0x7f02005f;
+        public static final int puzzle_2=0x7f020060;
+        public static final int puzzle_3=0x7f020061;
+        public static final int puzzle_4=0x7f020062;
     }
     public static final class id {
         public static final int action_bar=0x7f05001c;
@@ -1220,7 +1226,7 @@ containing a value of this type.
         public static final int support_simple_spinner_dropdown_item=0x7f03001d;
     }
     public static final class menu {
-        public static final int game_play=0x7f0c0000;
+        public static final int game_play=0x7f0d0000;
     }
     public static final class string {
         /**  Content description for the action bar "home" affordance. [CHAR LIMIT=NONE] 
@@ -1264,6 +1270,8 @@ containing a value of this type.
          */
         public static final int abc_shareactionprovider_share_with_application=0x7f0a000b;
         public static final int app_name=0x7f0a000d;
+        public static final int cancel=0x7f0a001d;
+        public static final int change_difficulty=0x7f0a001e;
         public static final int difficulty=0x7f0a0012;
         public static final int game_open=0x7f0a0015;
         public static final int image_select=0x7f0a000e;
@@ -1275,6 +1283,7 @@ containing a value of this type.
         public static final int puzzle_name=0x7f0a0017;
         public static final int quit=0x7f0a0010;
         public static final int reset=0x7f0a0011;
+        public static final int save=0x7f0a001c;
         public static final int title_activity_game_play=0x7f0a000f;
         public static final int title_activity_you_won=0x7f0a0019;
         public static final int win_message=0x7f0a001a;

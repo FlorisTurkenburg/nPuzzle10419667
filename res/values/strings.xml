@@ -16,5 +16,8 @@
     <string name="title_activity_you_won">YouWon</string>
     <string name="win_message">You have won!</string>
     <string name="new_game">New Game</string>
+    <string name="save">Save changes</string>
+    <string name="cancel">Cancel</string>
+    <string name="change_difficulty">Change difficulty</string>
 
 </resources>

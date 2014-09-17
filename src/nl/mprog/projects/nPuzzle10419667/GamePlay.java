@@ -1,4 +1,5 @@
-/* Author: Floris Turkenburg
+/* 
+ * Author: Floris Turkenburg
  * Email: sk8_floris@hotmail.com
  * UvANetID: 10419667 
  * 
@@ -10,12 +11,15 @@ package nl.mprog.projects.nPuzzle10419667;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -32,6 +36,7 @@ public class GamePlay extends ActionBarActivity {
     int numTiles;
     int moves = 0;
     Bitmap[] tiles;
+    String puzzleName;
 
     /*
      * public int[] tilePos = { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
@@ -46,7 +51,6 @@ public class GamePlay extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String puzzleName;
 
         Intent intent = getIntent();
 
@@ -92,10 +96,13 @@ public class GamePlay extends ActionBarActivity {
             playGame();
 
         } else {
+            final ActionBar actionBar = getSupportActionBar();
+            actionBar.hide();
             showPreview();
 
             mHandler.postDelayed(new Runnable() {
                 public void run() {
+                    actionBar.show();
                     playGame();
                 }
             }, 3000);
@@ -122,6 +129,8 @@ public class GamePlay extends ActionBarActivity {
             intent.putExtra("fromGamePlay", true);
             startActivity(intent);
             return true;
+        } else if (id == R.id.difficulty) {
+            openChangeDifficulty();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -271,12 +280,89 @@ public class GamePlay extends ActionBarActivity {
         return true;
     }
 
+    int newDifficulty;
+
+    public void openChangeDifficulty() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlay.this);
+        // Add the buttons
+        builder.setTitle(R.string.change_difficulty);
+
+        final SharedPreferences sharedPref = getSharedPreferences(
+                getString(R.string.pref_file_key),
+                Context.MODE_PRIVATE);
+
+        final int oldDifficulty;
+        String difficulty = sharedPref.getString(getString(R.string.pref_difficulty), "medium");
+        switch (difficulty) {
+            case "easy":
+                oldDifficulty = 0;
+                break;
+            case "medium":
+                oldDifficulty = 1;
+                break;
+            case "hard":
+                oldDifficulty = 2;
+                break;
+            default:
+                oldDifficulty = 1;
+        }
+        newDifficulty = oldDifficulty;
+        builder.setSingleChoiceItems(R.array.difficulties, oldDifficulty,
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        // The 'which' argument contains the index position
+                        // of the selected item
+                        newDifficulty = which;
+                    }
+                });
+
+        builder.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User clicked Save changes button
+                // The difficulty only needs to be saved and the game needs to be restarted if the
+                // difficulty has changed.
+                if (newDifficulty != oldDifficulty) {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.clear();
+                    switch (newDifficulty) {
+                        case 0:
+                            editor.putString(getString(R.string.pref_difficulty), "easy");
+                            break;
+                        case 1:
+                            editor.putString(getString(R.string.pref_difficulty), "medium");
+                            break;
+                        case 2:
+                            editor.putString(getString(R.string.pref_difficulty), "hard");
+                            break;
+                    }
+                    editor.commit();
+                    
+                    Intent intent = new Intent(GamePlay.this, GamePlay.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                    intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
+                    startActivity(intent);
+
+                }
+            }
+        });
+        builder.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                // User cancelled the dialog
+            }
+        });
+        // Create the AlertDialog
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+    }
+
     // Overrides the back button to open the menu instead of returning to the previous activity.
     @Override
     public void onBackPressed() {
         openOptionsMenu();
     }
 
+    // Save the state.
     @Override
     protected void onPause() {
         super.onPause();
@@ -292,6 +378,7 @@ public class GamePlay extends ActionBarActivity {
         editor.commit();
     }
 
+    // If stopped, recycle the bitmaps to free memory.
     @Override
     protected void onStop() {
         super.onStop();

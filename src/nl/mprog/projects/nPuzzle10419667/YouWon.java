@@ -1,21 +1,32 @@
-
+/* 
+ * Author: Floris Turkenburg
+ * Email: sk8_floris@hotmail.com
+ * UvANetID: 10419667 
+ * 
+ * 
+ * 
+ */
 package nl.mprog.projects.nPuzzle10419667;
 
-import android.app.Activity;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class YouWon extends Activity {
+public class YouWon extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
         setContentView(R.layout.activity_you_won);
         SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
                 Context.MODE_PRIVATE);
@@ -62,7 +73,7 @@ public class YouWon extends Activity {
 
     }
 
-    // If the app is inproperly closed while in the You Won screen, delete the saved game anyway.
+    // If the app is improperly closed while in the YouWon screen, delete the saved game anyway.
     @Override
     protected void onDestroy() {
         super.onDestroy();
