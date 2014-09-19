@@ -22,3 +22,6 @@ List of features:
   + number of moves
   + tile-position
   + difficulty
+
+
+![Overview of the app](/doc/MockupOverview.png "Overview of the screens")
