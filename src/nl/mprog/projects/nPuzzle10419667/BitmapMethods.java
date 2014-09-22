@@ -8,6 +8,7 @@ package nl.mprog.projects.nPuzzle10419667;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 
 /* These methods are taken from the android developer site, they are used to
@@ -51,6 +52,7 @@ public class BitmapMethods {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
+        options.inPreferredConfig= Config.RGB_565;
         return BitmapFactory.decodeResource(res, resId, options);
     }
 }

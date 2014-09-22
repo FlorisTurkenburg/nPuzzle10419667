@@ -9,8 +9,6 @@
 
 package nl.mprog.projects.nPuzzle10419667;
 
-import android.app.ActivityManager;
-import android.app.ActivityManager.MemoryInfo;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -22,14 +20,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 public class GamePlay extends ActionBarActivity {
     private Handler mHandler = new Handler();
@@ -39,30 +35,37 @@ public class GamePlay extends ActionBarActivity {
     Bitmap[] tiles;
     String puzzleName;
 
-    /*
-     * public int[] tilePos = { 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0 };
-     */
-
     // This array links the position of the tile in the screen (the index) with
-    // the number of the tile bitmap (the value corresponds with the index in Bitmap[] tiles).
+    // the number of the tile bitmap (the value corresponds with an index in Bitmap[] tiles).
     public int[] tilePos;
-    
+
     public int[] tilePosEasy = {
-            8,7,6,5,4,3,2,1,0
+            8, 7, 6,
+            5, 4, 3,
+            2, 1, 0
     };
-    
-    
+
     public int[] tilePosMed = {
-            15,14,13,12,11,10,9,8,7,6,5,4,3,2,0,1
+            15, 14, 13, 12,
+            11, 10, 9, 8,
+            7, 6, 5, 4,
+            3, 2, 0, 1
     };
-    
+
     public int[] tilePosHard = {
-            24,23,22,21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2,1,0
+            24, 23, 22, 21, 20,
+            19, 18, 17, 16, 15,
+            14, 13, 12, 11, 10,
+            9, 8, 7, 6, 5,
+            4, 3, 2, 1, 0
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        final ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
 
         Intent intent = getIntent();
 
@@ -112,7 +115,6 @@ public class GamePlay extends ActionBarActivity {
             playGame();
 
         } else {
-            final ActionBar actionBar = getSupportActionBar();
             actionBar.hide();
             showPreview();
 
@@ -158,12 +160,8 @@ public class GamePlay extends ActionBarActivity {
     public void createTiles(Integer id) {
         tiles = new Bitmap[numTiles];
 
-        MemoryInfo memInfo = new MemoryInfo();
-        ActivityManager actMan = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-        actMan.getMemoryInfo(memInfo);
-        Log.i("GamePlay", "Memory available before tiles: " + memInfo.availMem);
+        
         Bitmap puzzle = BitmapMethods.decodeSampledBitmapFromResource(getResources(), id, 200, 200);
-        // Bitmap puzzle = BitmapFactory.decodeResource(getResources(), (int) id);
         int width = puzzle.getWidth();
         int height = puzzle.getHeight();
 
@@ -179,14 +177,10 @@ public class GamePlay extends ActionBarActivity {
             }
         }
         tiles[numTiles - 1] = Bitmap.createBitmap(tileWidth, tileHeight, Config.ALPHA_8);
-        
-        actMan.getMemoryInfo(memInfo);
-        Log.i("GamePlay", "Memory available after tiles: " + memInfo.availMem);
+
 
         puzzle.recycle();
         puzzle = null;
-        actMan.getMemoryInfo(memInfo);
-        Log.i("GamePlay", "Memory available after puzzle.recycle(): " + memInfo.availMem);
 
     }
 
@@ -228,8 +222,6 @@ public class GamePlay extends ActionBarActivity {
         gridview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(GamePlay.this, "You Clicked at " + position, Toast.LENGTH_SHORT)
-                        .show();
 
                 if (checkIfNeighbouringEmpty(position)) {
                     text.setText("Moves: " + moves);
@@ -276,6 +268,8 @@ public class GamePlay extends ActionBarActivity {
         int xDiff = tileX - emptyX;
         int yDiff = tileY - emptyY;
 
+        // If they are neighbours, swap the two tiles, and increment the number of moves, then
+        // return true.
         if ((xDiff == 0 && Math.abs(yDiff) == 1) || (Math.abs(xDiff) == 1 && yDiff == 0)) {
             int temp = tilePos[indexEmpty];
             tilePos[indexEmpty] = tilePos[position];
@@ -290,6 +284,8 @@ public class GamePlay extends ActionBarActivity {
 
     }
 
+    // The puzzle is solved if all the values on the indices are the same number as the indices
+    // themselves, in the tilePos array.
     public boolean checkIfSolved() {
 
         for (int i = 0; i < numTiles; i++) {
@@ -357,7 +353,7 @@ public class GamePlay extends ActionBarActivity {
                             break;
                     }
                     editor.commit();
-                    
+
                     newGame();
 
                 }
@@ -373,14 +369,15 @@ public class GamePlay extends ActionBarActivity {
         dialog.show();
 
     }
-    
+
     public void newGame() {
-        
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),Context.MODE_PRIVATE);
+
+        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
+                Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.game_open), false);
         editor.commit();
-        
+
         Intent intent = new Intent(GamePlay.this, GamePlay.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);

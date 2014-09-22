@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 public class ImageSelection extends Activity {
     public final static String EXTRA_PUZZLENAME = "nl.mprog.projects.nPuzzle10419667.PUZZLENAME";
@@ -39,11 +38,11 @@ public class ImageSelection extends Activity {
         if (gameOpen && !fromExit) {
             // Resume the game
             Intent intent = new Intent(ImageSelection.this, GamePlay.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(intent);
 
         } else {
             setContentView(R.layout.activity_image_selection);
+            
 
             // Check how many images there are available
             int i = 0;
@@ -66,15 +65,12 @@ public class ImageSelection extends Activity {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     String name = getResources().getResourceEntryName(imageId[+position]);
-                    Toast.makeText(ImageSelection.this, "You Clicked at " + name,
-                            Toast.LENGTH_SHORT).show();
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean(getString(R.string.game_open), false);
                     editor.commit();
 
                     Intent intent = new Intent(ImageSelection.this, GamePlay.class);
                     intent.putExtra(EXTRA_PUZZLENAME, name);
-                    //intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                     startActivity(intent);
                 }
             });
