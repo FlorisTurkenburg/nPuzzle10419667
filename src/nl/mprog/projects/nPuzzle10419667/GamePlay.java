@@ -27,6 +27,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
 
+import java.util.Random;
+
 public class GamePlay extends ActionBarActivity {
     private Handler mHandler = new Handler();
     int puzzleSize;
@@ -34,6 +36,9 @@ public class GamePlay extends ActionBarActivity {
     int moves = 0;
     Bitmap[] tiles;
     String puzzleName;
+    int indexEmptyTile = 0;
+    int emptyTileX = 0;
+    int emptyTileY = 0;
 
     // This array links the position of the tile in the screen (the index) with
     // the number of the tile bitmap (the value corresponds with an index in Bitmap[] tiles).
@@ -160,7 +165,6 @@ public class GamePlay extends ActionBarActivity {
     public void createTiles(Integer id) {
         tiles = new Bitmap[numTiles];
 
-        
         Bitmap puzzle = BitmapMethods.decodeSampledBitmapFromResource(getResources(), id, 200, 200);
         int width = puzzle.getWidth();
         int height = puzzle.getHeight();
@@ -178,9 +182,25 @@ public class GamePlay extends ActionBarActivity {
         }
         tiles[numTiles - 1] = Bitmap.createBitmap(tileWidth, tileHeight, Config.ALPHA_8);
 
-
         puzzle.recycle();
         puzzle = null;
+
+    }
+
+    // This method is implemented so the empty tile only has to be found once in the beginning.
+    // These coordinates will be updated if the tile moves (in checkIfNeighbouringEmpty()).
+    public void initEmptyTilePos() {
+        // Search for the 1D index of the empty tile (= the last tile = n*n-1)
+        for (int i = 0; i < numTiles; i++) {
+            if (tilePos[i] == numTiles - 1) {
+                indexEmptyTile = i;
+                break;
+            }
+        }
+
+        // Calculate the 2D coordinates.
+        emptyTileX = indexEmptyTile % puzzleSize;
+        emptyTileY = (int) indexEmptyTile / puzzleSize;
 
     }
 
@@ -197,6 +217,7 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public void playGame() {
+        initEmptyTilePos();
 
         final Bitmap[] newTiles = new Bitmap[numTiles];
 
@@ -249,31 +270,24 @@ public class GamePlay extends ActionBarActivity {
     }
 
     public boolean checkIfNeighbouringEmpty(int position) {
-        int indexEmpty = 0;
-        // Search for the 1d index of the empty tile (= the last tile = n*n-1)
-        for (int i = 0; i < numTiles; i++) {
-            if (tilePos[i] == numTiles - 1) {
-                indexEmpty = i;
-                break;
-            }
-        }
 
-        // Convert the 1d positions to 2d coordinates
+        // Convert the 1D positions to 2D coordinates
         int tileX = position % puzzleSize;
         int tileY = (int) position / puzzleSize;
 
-        int emptyX = indexEmpty % puzzleSize;
-        int emptyY = (int) indexEmpty / puzzleSize;
+        int xDiff = tileX - emptyTileX;
+        int yDiff = tileY - emptyTileY;
 
-        int xDiff = tileX - emptyX;
-        int yDiff = tileY - emptyY;
-
-        // If they are neighbours, swap the two tiles, and increment the number of moves, then
-        // return true.
+        // If they are neighbours, swap the two tiles, update the empty tile coordinates, and
+        // increment the number of moves, then return true.
         if ((xDiff == 0 && Math.abs(yDiff) == 1) || (Math.abs(xDiff) == 1 && yDiff == 0)) {
-            int temp = tilePos[indexEmpty];
-            tilePos[indexEmpty] = tilePos[position];
+            int temp = tilePos[indexEmptyTile];
+            tilePos[indexEmptyTile] = tilePos[position];
             tilePos[position] = temp;
+
+            indexEmptyTile = position;
+            emptyTileX = tileX;
+            emptyTileY = tileY;
 
             moves++;
 
@@ -383,6 +397,48 @@ public class GamePlay extends ActionBarActivity {
         intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
         startActivity(intent);
     }
+    
+    
+/*    public void permute(Random random) {
+        for (int i = numTiles; --i > 0; ) {
+            int pos = random.nextInt(i);
+            int temp = tilePos[pos];
+            tilePos[pos] = tilePos[i];
+            tilePos[i] = temp;
+        }
+    }
+    
+    public int countInversions() {
+        int inversions = 0;
+        for (int i = 0; i < numTiles; i++) {
+            // If it is the empty tile, store the index and skip checking for this tile.
+            if (tilePos[i] == numTiles-1) {
+                indexEmptyTile = i;
+                i++;
+            }
+            for (int t = i+1; t < numTiles; t++) {
+                if (tilePos[i] > tilePos[t] && tilePos[i] != (numTiles-1) ) {
+                    inversions++;
+                }
+            }
+        }
+        
+        return inversions;
+    }
+
+    public void findRandomSolvablePuzzle() {
+        int inversions;
+        boolean NotSolvable = true;
+        while(NotSolvable) {
+            permute(new Random());
+            inversions = countInversions();
+            if (puzzleSize % 2 == 1) {
+                    
+            }
+        }
+        
+    }*/
+    
 
     // Overrides the back button to open the menu instead of returning to the previous activity.
     @Override
