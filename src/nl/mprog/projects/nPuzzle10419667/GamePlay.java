@@ -125,6 +125,7 @@ public class GamePlay extends ActionBarActivity {
 
             mHandler.postDelayed(new Runnable() {
                 public void run() {
+                    findRandomSolvablePuzzle();
                     actionBar.show();
                     playGame();
                 }
@@ -397,48 +398,60 @@ public class GamePlay extends ActionBarActivity {
         intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
         startActivity(intent);
     }
-    
-    
-/*    public void permute(Random random) {
-        for (int i = numTiles; --i > 0; ) {
+
+    // Randomly permute the tile positions, this method is based on the method found on:
+    // http://www.java2s.com/Code/Java/Development-Class/Randomlypermutestheelementsofthespecifiedarray.htm
+    public void permute(Random random) {
+        for (int i = numTiles; --i > 0;) {
             int pos = random.nextInt(i);
             int temp = tilePos[pos];
             tilePos[pos] = tilePos[i];
             tilePos[i] = temp;
         }
     }
-    
+
     public int countInversions() {
         int inversions = 0;
         for (int i = 0; i < numTiles; i++) {
             // If it is the empty tile, store the index and skip checking for this tile.
-            if (tilePos[i] == numTiles-1) {
+            if (tilePos[i] == numTiles - 1) {
                 indexEmptyTile = i;
                 i++;
             }
-            for (int t = i+1; t < numTiles; t++) {
-                if (tilePos[i] > tilePos[t] && tilePos[i] != (numTiles-1) ) {
+            for (int t = i + 1; t < numTiles; t++) {
+                if (tilePos[i] > tilePos[t] && tilePos[i] != (numTiles - 1)) {
                     inversions++;
                 }
             }
         }
-        
+
         return inversions;
     }
 
+    // This method finds a solvable puzzle by permuting the tile positions randomly and then checks
+    // if this permutation is solvable following the rules from this website:
+    // http://www.cs.bham.ac.uk/~mdr/teaching/modules04/java2/TilesSolvability.html
+    // Once a solvable puzzle is found, the while loop stops, if not, it continues till it has found
+    // a solvable one.
     public void findRandomSolvablePuzzle() {
         int inversions;
-        boolean NotSolvable = true;
-        while(NotSolvable) {
+        boolean solvable = false;
+        while (!solvable) {
             permute(new Random());
             inversions = countInversions();
             if (puzzleSize % 2 == 1) {
-                    
+                solvable = (inversions % 2 == 0);
+            } else {
+                int emptyRow = puzzleSize - ((int) indexEmptyTile / puzzleSize);
+                if (emptyRow % 2 == 1) {
+                    solvable = (inversions % 2 == 0);
+                } else {
+                    solvable = (inversions % 2 == 1);
+                }
             }
         }
-        
-    }*/
-    
+
+    }
 
     // Overrides the back button to open the menu instead of returning to the previous activity.
     @Override
