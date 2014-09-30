@@ -20,7 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class YouWon extends ActionBarActivity {
+public class YouWonActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +28,7 @@ public class YouWon extends ActionBarActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.hide();
         setContentView(R.layout.activity_you_won);
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
 
         String puzzleName = sharedPref.getString(getString(R.string.puzzle_name), "puzzle_0");
         int id = getResources().getIdentifier(puzzleName, "drawable", getPackageName());
@@ -42,11 +41,10 @@ public class YouWon extends ActionBarActivity {
         ImageView image = (ImageView) findViewById(R.id.puzzleComplete);
         image.setImageBitmap(BitmapMethods.decodeSampledBitmapFromResource(getResources(), id,
                 width, height));
-        // image.setImageResource(id);
 
         int moves = sharedPref.getInt(getString(R.string.num_moves), 0);
         TextView moveText = (TextView) findViewById(R.id.finalMoves);
-        moveText.setText("Moves: " + moves);
+        moveText.setText(getString(R.string.moves) + moves);
 
         // Clear the saved game but save the difficulty. gameOpen != true because it is deleted by
         // editor.clear().
@@ -61,7 +59,7 @@ public class YouWon extends ActionBarActivity {
     // Return to the ImageSelect activity and clear the back stack.
     public void newGame(View view) {
 
-        Intent intent = new Intent(YouWon.this, ImageSelection.class);
+        Intent intent = new Intent(YouWonActivity.this, ImageSelectionActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
@@ -78,8 +76,7 @@ public class YouWon extends ActionBarActivity {
     protected void onDestroy() {
         super.onDestroy();
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
         String difficulty = sharedPref.getString(getString(R.string.pref_difficulty), "medium");
 
         SharedPreferences.Editor editor = sharedPref.edit();

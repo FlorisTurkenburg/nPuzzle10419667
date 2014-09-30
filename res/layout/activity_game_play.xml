@@ -7,7 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="nl.mprog.projects.nPuzzle10419667.GamePlay" >
+    tools:context="nl.mprog.projects.nPuzzle10419667.GamePlayActivity" >
 
     <TextView
         android:id="@+id/moves"
@@ -16,7 +16,6 @@
         android:layout_centerHorizontal="true"
         android:layout_margin="5dp"
         android:padding="5dp"
-        android:text="@string/moves"
         android:textSize="26sp"
         android:textStyle="bold|italic" />
 

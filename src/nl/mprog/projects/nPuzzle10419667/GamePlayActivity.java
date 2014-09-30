@@ -29,16 +29,17 @@ import android.widget.TextView;
 
 import java.util.Random;
 
-public class GamePlay extends ActionBarActivity {
+public class GamePlayActivity extends ActionBarActivity {
+    public final static String EXTRA_FROMGAMEPLAY = "nl.mprog.projects.nPuzzle10419667.FROMGAMEPLAY";
     private Handler mHandler = new Handler();
-    int puzzleSize;
-    int numTiles;
-    int moves = 0;
-    Bitmap[] tiles;
-    String puzzleName;
-    int indexEmptyTile = 0;
-    int emptyTileX = 0;
-    int emptyTileY = 0;
+    private int puzzleSize;
+    private int numTiles;
+    private int moves = 0;
+    private Bitmap[] tiles;
+    private String puzzleName;
+    private int indexEmptyTile = 0;
+    private int emptyTileX = 0;
+    private int emptyTileY = 0;
 
     // This array links the position of the tile in the screen (the index) with
     // the number of the tile bitmap (the value corresponds with an index in Bitmap[] tiles).
@@ -74,8 +75,7 @@ public class GamePlay extends ActionBarActivity {
 
         Intent intent = getIntent();
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
 
         String difficulty = sharedPref.getString(getString(R.string.pref_difficulty), "medium");
         boolean resume = sharedPref.getBoolean(getString(R.string.game_open), false);
@@ -83,7 +83,7 @@ public class GamePlay extends ActionBarActivity {
         if (resume) {
             puzzleName = sharedPref.getString(getString(R.string.puzzle_name), "puzzle_0");
         } else {
-            puzzleName = intent.getStringExtra(ImageSelection.EXTRA_PUZZLENAME);
+            puzzleName = intent.getStringExtra(ImageSelectionActivity.EXTRA_PUZZLENAME);
             SharedPreferences.Editor editor = sharedPref.edit();
             editor.putString(getString(R.string.puzzle_name), puzzleName);
             editor.commit();
@@ -149,8 +149,8 @@ public class GamePlay extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         if (id == R.id.quit) {
-            Intent intent = new Intent(GamePlay.this, ImageSelection.class);
-            intent.putExtra("fromGamePlay", true);
+            Intent intent = new Intent(GamePlayActivity.this, ImageSelectionActivity.class);
+            intent.putExtra(EXTRA_FROMGAMEPLAY, true);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             return true;
@@ -228,15 +228,14 @@ public class GamePlay extends ActionBarActivity {
             newTiles[i] = tiles[tilePos[i]];
         }
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.game_open), true);
         editor.commit();
 
         setContentView(R.layout.activity_game_play);
         final TextView text = (TextView) findViewById(R.id.moves);
-        text.setText("Moves: " + moves);
+        text.setText(getString(R.string.moves) + moves);
         final GridView gridview = (GridView) findViewById(R.id.gamegridview);
         gridview.setNumColumns(puzzleSize);
         gridview.setAdapter(new ImageAdapter(this, newTiles));
@@ -246,11 +245,11 @@ public class GamePlay extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 if (checkIfNeighbouringEmpty(position)) {
-                    text.setText("Moves: " + moves);
+                    text.setText(getString(R.string.moves) + moves);
                     for (int i = 0; i < numTiles; i++) {
                         newTiles[i] = tiles[tilePos[i]];
                     }
-                    gridview.setAdapter(new ImageAdapter(GamePlay.this, newTiles));
+                    gridview.setAdapter(new ImageAdapter(GamePlayActivity.this, newTiles));
 
                     if (checkIfSolved()) {
                         for (int i = 0; i < numTiles - 1; i++) {
@@ -259,7 +258,7 @@ public class GamePlay extends ActionBarActivity {
 
                         }
 
-                        Intent intent = new Intent(GamePlay.this, YouWon.class);
+                        Intent intent = new Intent(GamePlayActivity.this, YouWonActivity.class);
                         startActivity(intent);
 
                     }
@@ -312,15 +311,14 @@ public class GamePlay extends ActionBarActivity {
         return true;
     }
 
-    int newDifficulty;
+    private int newDifficulty;
 
     public void openChangeDifficulty() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlay.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(GamePlayActivity.this);
         // Add the buttons
         builder.setTitle(R.string.change_difficulty);
 
-        final SharedPreferences sharedPref = getSharedPreferences(
-                getString(R.string.pref_file_key),
+        final SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs",
                 Context.MODE_PRIVATE);
 
         final int oldDifficulty;
@@ -387,15 +385,14 @@ public class GamePlay extends ActionBarActivity {
 
     public void newGame() {
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putBoolean(getString(R.string.game_open), false);
         editor.commit();
 
-        Intent intent = new Intent(GamePlay.this, GamePlay.class);
+        Intent intent = new Intent(GamePlayActivity.this, GamePlayActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        intent.putExtra(ImageSelection.EXTRA_PUZZLENAME, puzzleName);
+        intent.putExtra(ImageSelectionActivity.EXTRA_PUZZLENAME, puzzleName);
         startActivity(intent);
     }
 
@@ -464,8 +461,7 @@ public class GamePlay extends ActionBarActivity {
     protected void onPause() {
         super.onPause();
 
-        SharedPreferences sharedPref = getSharedPreferences(getString(R.string.pref_file_key),
-                Context.MODE_PRIVATE);
+        SharedPreferences sharedPref = getSharedPreferences("nPuzzlePrefs", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         for (int i = 0; i < numTiles; i++) {
             editor.putInt("tile" + i, tilePos[i]);

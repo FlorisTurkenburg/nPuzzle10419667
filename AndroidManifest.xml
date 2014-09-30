@@ -14,7 +14,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ImageSelection"
+            android:name=".ImageSelectionActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait" >
             <intent-filter>
@@ -24,12 +24,12 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".GamePlay"
+            android:name=".GamePlayActivity"
             android:label="@string/title_activity_game_play"
             android:screenOrientation="portrait" >
         </activity>
         <activity
-            android:name=".YouWon"
+            android:name=".YouWonActivity"
             android:label="@string/title_activity_you_won" 
             android:screenOrientation="portrait" >
         </activity>

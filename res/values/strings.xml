@@ -7,12 +7,11 @@
     <string name="quit">Quit game</string>
     <string name="reset">Reset puzzle</string>
     <string name="difficulty">Difficulty</string>
-    <string name="moves">Moves: 0</string>
+    <string name="moves">Moves:\u0020</string>
     <string name="pref_difficulty">Difficulty</string>
     <string name="game_open">gameOpen</string>
     <string name="num_moves">numMoves</string>
     <string name="puzzle_name">puzzleName</string>
-    <string name="pref_file_key">nPuzzlePrefs</string>
     <string name="title_activity_you_won">YouWon</string>
     <string name="win_message">You have won!</string>
     <string name="new_game">New Game</string>
