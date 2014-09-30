@@ -52,7 +52,8 @@ public class BitmapMethods {
 
         // Decode bitmap with inSampleSize set
         options.inJustDecodeBounds = false;
-        options.inPreferredConfig= Config.RGB_565;
+        options.inPreferredConfig = Config.RGB_565; // This config is chosen to avoid OutOfMemory
+                                                    // errors.
         return BitmapFactory.decodeResource(res, resId, options);
     }
 }
